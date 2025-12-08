@@ -28,7 +28,7 @@ jobs:
           dotnet-version: '3.1.x'
 
       - name: Install Archy CLI
-        run: dotnet tool install --global GenesysCloud.Archy
+        run: dotnet tool install --global Archy
 
       - name: Check Archy Version
         run: archy --version
