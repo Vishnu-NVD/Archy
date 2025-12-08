@@ -12,7 +12,7 @@ on:
 
 jobs:
   archy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       ARCHY_CLIENT_ID: ${{ secrets.ARCHY_CLIENT_ID }}
       ARCHY_CLIENT_SECRET: ${{ secrets.ARCHY_CLIENT_SECRET }}
