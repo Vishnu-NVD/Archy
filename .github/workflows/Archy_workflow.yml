@@ -1,0 +1,44 @@
+name: "Genesys CX Architect Flow Deployment"
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      destroy:
+        description: 'Set to true to skip publishing flows'
+        required: false
+        default: 'false'
+
+jobs:
+  archy:
+    runs-on: ubuntu-latest
+    env:
+      ARCHY_CLIENT_ID: ${{ secrets.ARCHY_CLIENT_ID }}
+      ARCHY_CLIENT_SECRET: ${{ secrets.ARCHY_CLIENT_SECRET }}
+      ARCHY_ENVIRONMENT: ${{ secrets.ARCHY_ENVIRONMENT }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET Core 3.1
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '3.1.x'
+
+      - name: Install Archy CLI
+        run: dotnet tool install --global Archy
+
+      - name: Check Archy Version
+        run: archy --version
+
+      - name: Archy Login
+        run: archy login --client-id $ARCHY_CLIENT_ID --client-secret $ARCHY_CLIENT_SECRET --environment $ARCHY_ENVIRONMENT
+
+      # Publish on push OR workflow_dispatch when destroy != true
+      - name: Publish Architect Flow
+        if: |
+          (github.event_name == 'push') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.destroy != 'true')
+        run: archy publish-flow --file Archyflow.yaml --overwrite
