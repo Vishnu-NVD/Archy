@@ -36,14 +36,7 @@ jobs:
       - name: Archy Login
         run: archy login --client-id $ARCHY_CLIENT_ID --client-secret $ARCHY_CLIENT_SECRET --environment $ARCHY_ENVIRONMENT
 
-      - name: Publish Architect Flow (with debug)
-        if: github.event_name == 'push' || github.event.inputs.destroy != 'true'
-        run: |
-          echo "=== Working Directory ==="
-          pwd
-          echo "=== Files ==="
-          ls -R
-          echo "=== Starting Archy Publish ==="
-          archy publish-flow --file Archy/Archyflow.yaml --overwrite --debug
+      - name: Publish Architect Flow
+        run: archy publish-flow --file Archy/Archyflow.yaml --overwrite --debug
 
 
