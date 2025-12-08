@@ -31,12 +31,17 @@ jobs:
         run: dotnet tool install --global Archy
 
       - name: Check Archy Version
-        run: archy --version
+        run: archy --version --non-interactive
 
       - name: Archy Login
-        run: archy login --client-id $ARCHY_CLIENT_ID --client-secret $ARCHY_CLIENT_SECRET --environment $ARCHY_ENVIRONMENT
+        run: archy login --client-id $ARCHY_CLIENT_ID --client-secret $ARCHY_CLIENT_SECRET --environment $ARCHY_ENVIRONMENT --non-interactive
 
       - name: Publish Architect Flow
-        run: archy publish-flow --file Archy/Archyflow.yaml --overwrite --debug
-
-
+        if: github.event_name == 'push' || github.event.inputs.destroy != 'true'
+        run: |
+          echo "=== Working Directory ==="
+          pwd
+          echo "=== Files ==="
+          dir
+          echo "=== Starting Archy Publish ==="
+          archy publish-flow --file Archy/Archyflow.yaml --overwrite --debug --non-interactive
