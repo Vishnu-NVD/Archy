@@ -1,26 +1,162 @@
-inboundShortMessage:
-  name: Archy Practice Flow_3
+inboundCall:
+  name: POC-ANI-Flow_1
+  description: POC-ANI-Flow_1
   division: Home
-  startUpRef: "/inboundShortMessage/states/state[Initial State_10]"
+  startUpRef: "/inboundCall/tasks/task[New Task 1_13]"
   defaultLanguage: en-us
   supportedLanguages:
     en-us:
       defaultLanguageSkill:
         noValue: true
+      textToSpeech:
+        defaultEngine:
+          defaultVoice: true
+  initialGreeting:
+    tts: Hello, Welcome to ANI Masking POC
+  settingsActionDefaults:
+    playAudioOnSilence:
+      timeout:
+        lit:
+          seconds: 40
+    detectSilence:
+      timeout:
+        lit:
+          seconds: 40
+    callData:
+      processingPrompt:
+        noValue: true
+    collectInput:
+      noEntryTimeout:
+        lit:
+          seconds: 5
+    dialByExtension:
+      interDigitTimeout:
+        lit:
+          seconds: 6
+    transferToUser:
+      connectTimeout:
+        noValue: true
+    transferToNumber:
+      connectTimeout:
+        noValue: true
+    transferToGroup:
+      connectTimeout:
+        noValue: true
+    transferToFlowSecure:
+      connectTimeout:
+        lit:
+          seconds: 15
   settingsErrorHandling:
     errorHandling:
-      queue:
-        targetQueue:
-          lit:
-            name: CxAsCode
-  states:
-    - state:
-        name: Initial State
-        refId: Initial State_10
+      disconnect:
+        none: true
+    preHandlingAudio:
+      tts: Sorry, an error occurred. Please try your call again.
+  settingsMenu:
+    extensionDialingMaxDelay:
+      lit:
+        seconds: 1
+    listenForExtensionDialing:
+      lit: true
+    menuSelectionTimeout:
+      lit:
+        seconds: 10
+    repeatCount:
+      lit: 3
+  settingsPrompts:
+    ensureAudioInPrompts: false
+    promptMediaToValidate:
+      - mediaType: audio
+      - mediaType: tts
+  settingsSpeechRec:
+    completeMatchTimeout:
+      lit:
+        ms: 100
+    incompleteMatchTimeout:
+      lit:
+        ms: 1500
+    maxSpeechLengthTimeout:
+      lit:
+        seconds: 20
+    minConfidenceLevel:
+      lit: 50
+    asrCompanyDir: none
+    asrEnabledOnFlow: true
+    suppressRecording: true
+  tasks:
+    - task:
+        name: New Task 1
+        refId: New Task 1_13
+        variables:
+          - stringVariable:
+              name: Task.CustomerID
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: Task.MaskedANI
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: Task.RawANI
+              initialValue:
+                noValue: true
+              isInput: true
+              isOutput: false
         actions:
-          - sendResponse:
-              name: Send Response
-              messageBody:
-                exp: "\"Hello!!! Welcome to Archy world . Start working on Cx As Code\""
+          - updateData:
+              name: Update Data
+              statements:
+                - string:
+                    variable: Task.RawANI
+                    value:
+                      exp: Call.Ani
+                - string:
+                    variable: Task.MaskedANI
+                    value:
+                      exp: "\"--\" + Right(Call.Ani, 4)"
+                - string:
+                    variable: Task.CustomerID
+                    value:
+                      exp: "\"CUST-\" + Right(Call.Ani, 4) + \"-\" + ToString(RandomInt(8999) + 1000)"
+          - setParticipantData:
+              name: Set Participant Data
+              attributes:
+                - attribute:
+                    name:
+                      lit: maskedPhone
+                    value:
+                      exp: Task.MaskedANI
+                - attribute:
+                    name:
+                      lit: customerID
+                    value:
+                      exp: Task.CustomerID
+                - attribute:
+                    name:
+                      lit: originalANI
+                    value:
+                      exp: Task.RawANI
+          - transferToAcd:
+              name: Transfer to ACD
+              targetQueue:
+                lit:
+                  name: POC-ANI-Mask-Queue
+              priority:
+                lit: 0
+              preferredAgents:
+                noValue: true
+              languageSkill:
+                noValue: true
+              directAgent:
+                noValue: true
+              failureOutputs:
+                errorType:
+                  noValue: true
+                errorMessage:
+                  noValue: true
           - disconnect:
               name: Disconnect
