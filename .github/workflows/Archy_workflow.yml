@@ -37,8 +37,14 @@ jobs:
         run: archy login --client-id $ARCHY_CLIENT_ID --client-secret $ARCHY_CLIENT_SECRET --environment $ARCHY_ENVIRONMENT
 
       # Publish on push OR workflow_dispatch when destroy != true
-      - name: Publish Architect Flow
-        if: |
-          (github.event_name == 'push') ||
-          (github.event_name == 'workflow_dispatch' && github.event.inputs.destroy != 'true')
-        run: archy publish-flow --file Archyflow.yaml --overwrite
+      - name: Publish Architect Flow (with debug)
+  if: |
+    (github.event_name == 'push') ||
+    (github.event_name == 'workflow_dispatch' && github.event.inputs.destroy != 'true')
+  run: |
+    echo "=== Working Directory ==="
+    pwd
+    echo "=== Files ==="
+    ls -R
+    echo "=== Starting Archy Publish ==="
+    archy publish-flow --file Archyflow.yaml --overwrite --debug
