@@ -5,17 +5,16 @@ runs:
   using: "composite"
   steps:
     - name: Install Archy
-      run: |
-        ARCHY_VERSION="v1.3.0"
-        echo "Downloading Archy $ARCHY_VERSION..."
-        wget -q https://github.com/GenesysCloudDevOps/archy/releases/download/$ARCHY_VERSION/archy-linux-glibc-amd64
+  run: |
+    ARCHY_VERSION="v2.0.1"
+    echo "Downloading Archy $ARCHY_VERSION..."
+    wget https://sdk-cdn.mypurecloud.com/archy/$ARCHY_VERSION/archy-linux-x64 -O archy
+    chmod +x archy
+    mkdir -p $GITHUB_WORKSPACE/archy
+    mv archy $GITHUB_WORKSPACE/archy/
+    echo "$GITHUB_WORKSPACE/archy" >> $GITHUB_PATH
+  shell: bash
 
-        chmod +x archy-linux-glibc-amd64
-        mv archy-linux-glibc-amd64 archy
-
-        echo "$GITHUB_WORKSPACE" >> $GITHUB_PATH
-
-      shell: bash
 
     - name: Install Genesys Cloud CLI
       run: |
