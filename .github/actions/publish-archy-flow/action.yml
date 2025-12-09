@@ -1,0 +1,35 @@
+name: "Publish Archy Flow"
+description: "Use Archy to Publish Architect Flows"
+
+inputs:
+  architect-flow-path:
+    description: "Full path to the .yaml flow file"
+    required: true
+  architect-results-path:
+    description: "Full path for the results file"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Publish Flow
+      env:
+        ARCHY_CLIENT_ID: ${{ env.ARCHY_CLIENT_ID }}
+        ARCHY_CLIENT_SECRET: ${{ env.ARCHY_CLIENT_SECRET }}
+        ARCHY_ENVIRONMENT: ${{ env.ARCHY_ENVIRONMENT }}
+      run: |
+        archy login \
+          --client-id "$ARCHY_CLIENT_ID" \
+          --client-secret "$ARCHY_CLIENT_SECRET" \
+          --environment "$ARCHY_ENVIRONMENT" \
+          --non-interactive
+
+        archy publish-flow \
+          --file "${{ inputs.architect-flow-path }}" \
+          --overwrite \
+          --results-file "${{ inputs.architect-results-path }}" \
+          --overwriteResultsFile \
+          --non-interactive
+
+        cat "${{ inputs.architect-results-path }}"
+      shell: bash
