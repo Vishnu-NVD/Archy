@@ -1,0 +1,38 @@
+name: "Genesys CX Architect Flow Deployment"
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "Archy/**"          # only run when flow files change
+
+  workflow_dispatch:
+    inputs:
+      destroy:
+        description: "Set true to skip publishing"
+        required: false
+        default: "false"
+
+jobs:
+  publish-flow:
+    runs-on: ubuntu-latest
+
+    # Secrets go here to pass into composite actions
+    env:
+      ARCHY_CLIENT_ID: ${{ secrets.ARCHY_CLIENT_ID }}
+      ARCHY_CLIENT_SECRET: ${{ secrets.ARCHY_CLIENT_SECRET }}
+      ARCHY_ENVIRONMENT: ${{ secrets.ARCHY_ENVIRONMENT }}
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Install Genesys Tools (Archy + CLI)
+        uses: ./.github/actions/setup-genesys-tools
+
+      - name: Publish Flow
+        if: github.event_name == 'push' || github.event.inputs.destroy != 'true'
+        uses: ./.github/actions/publish-archy-flow
+        with:
+          architect-flow-path: "Archy/Archyflow.yaml"
+          architect-results-path: "output/results.json"
