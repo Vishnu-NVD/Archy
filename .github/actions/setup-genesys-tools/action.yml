@@ -8,12 +8,13 @@ runs:
       run: |
         ARCHY_VERSION="v1.3.0"
         echo "Downloading Archy $ARCHY_VERSION..."
-        wget -q https://github.com/GenesysCloudDevOps/archy/releases/download/$ARCHY_VERSION/archy-linux-ubuntu-latest-amd64
+        wget -q https://github.com/GenesysCloudDevOps/archy/releases/download/$ARCHY_VERSION/archy-linux-glibc-amd64
 
-        chmod +x archy-linux-ubuntu-latest-amd64
-        mv archy-linux-ubuntu-latest-amd64 archy
+        chmod +x archy-linux-glibc-amd64
+        mv archy-linux-glibc-amd64 archy
 
         echo "$GITHUB_WORKSPACE" >> $GITHUB_PATH
+
       shell: bash
 
     - name: Install Genesys Cloud CLI
