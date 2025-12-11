@@ -1,38 +1,17 @@
 name: "Publish Archy Flow"
-description: "Publishes an Architect flow using Archy"
-
+description: "Use Archy to Publish Flows"
 inputs:
-  architect-flow-path:
-    description: "Path to the flow YAML"
+  architect-flow-path: # id of input
+    description: "The fully qualified directory and file name for the architect flow that will be published"
     required: true
-  architect-results-path:
-    description: "Path to write results JSON"
+  architect-results-path: # id of input
+    description: "The fully qualified directory and file name for the results file executed by the flow. If you have multiple flows make sure you name each results file to be unique."
     required: true
-
 runs:
   using: "composite"
   steps:
-    - name: Login + Publish Flow
-      env:
-        ARCHY_CLIENT_ID: ${{ env.ARCHY_CLIENT_ID }}
-        ARCHY_CLIENT_SECRET: ${{ env.ARCHY_CLIENT_SECRET }}
-        ARCHY_ENVIRONMENT: ${{ env.ARCHY_ENVIRONMENT }}
-      run: |
-        echo "=== Archy Login ==="
-        archy login \
-          --client-id "$ARCHY_CLIENT_ID" \
-          --client-secret "$ARCHY_CLIENT_SECRET" \
-          --environment "$ARCHY_ENVIRONMENT" \
-          --non-interactive
-
-        echo "=== Archy Publish ==="
-        archy publish-flow \
-          --file "${{ inputs.architect-flow-path }}" \
-          --overwrite \
-          --results-file "${{ inputs.architect-results-path }}" \
-          --overwriteResultsFile \
-          --non-interactive
-
-        echo "=== Results ==="
-        cat "${{ inputs.architect-results-path }}"
+    - run: |
+        export PATH=$PATH:$GITHUB_WORKSPACE/archy
+        archy publish --forceUnlock --file ${{inputs.architect-flow-path}} --clientId $GENESYSCLOUD_OAUTHCLIENT_ID --clientSecret $GENESYSCLOUD_OAUTHCLIENT_SECRET --location $GENESYSCLOUD_ARCHY_REGION  --overwriteResultsFile --resultsFile ${{inputs.architect-results-path}}
+        cat ${{inputs.architect-results-path}}
       shell: bash
