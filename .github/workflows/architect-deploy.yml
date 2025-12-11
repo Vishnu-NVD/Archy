@@ -6,22 +6,16 @@ on:
     workflow_dispatch:
 jobs:
   publish-flow:
-    runs-on: ubuntu-latest
-
-    env:
-      ARCHY_CLIENT_ID: ${{ secrets.ARCHY_CLIENT_ID }}
-      ARCHY_CLIENT_SECRET: ${{ secrets.ARCHY_CLIENT_SECRET }}
-      ARCHY_ENVIRONMENT: ${{ secrets.ARCHY_ENVIRONMENT }}
 
     runs-on: ubuntu-latest
     env:
-      GENESYSCLOUD_OAUTHCLIENT_ID: "700fa2a2-4678-46a2-b63e-0b5fb70fd446"
-      GENESYSCLOUD_OAUTHCLIENT_SECRET: "ddRaHd1JzeTo4Szu6U4yIlF5y99mdWuw3AME7z8Cyb8"
-      GENESYSCLOUD_API_REGION: "https://apps.mypurecloud.com/"
-      GENESYSCLOUD_REGION: "us-west-2"
-      GENESYSCLOUD_ARCHY_REGION: "apps.mypurecloud.com/"
+      GENESYSCLOUD_OAUTHCLIENT_ID: ${{ secrets.GENESYSCLOUD_OAUTHCLIENT_ID }}
+      GENESYSCLOUD_OAUTHCLIENT_SECRET: ${{ secrets.GENESYSCLOUD_OAUTHCLIENT_SECRET }}
+      GENESYSCLOUD_REGION: ${{ secrets.GENESYSCLOUD_REGION }}
+      GENESYSCLOUD_API_REGION: "https://apps.usw2.pure.cloud/"
+      GENESYSCLOUD_ARCHY_REGION: ${{ secrets.ARCHY_ENVIRONMENT }}
       GENESYSCLOUD_EMAIL_DOMAIN: "devengagedev"
-      GENESYSCLOUD_EMAIL_DOMAIN_REGION: "mypurecloud.com"
+      GENESYSCLOUD_EMAIL_DOMAIN_REGION: "usw2.pure.cloud"
      ###
      #  TF_WORKSPACE: "dev"
      ###
