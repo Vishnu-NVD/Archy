@@ -7,7 +7,7 @@ terraform {
       name = "CI_CD" 
     } 
   } 
-}
+
 
   required_providers {
     genesyscloud = {
