@@ -1,33 +1,18 @@
 name: "Setup Genesys Cloud Tools"
-description: "Installs Archy and dependencies"
-
+description: "Installs Archy and the Genesys Cloud CLI"
 runs:
   using: "composite"
   steps:
-    - name: Install Python dependencies
-      shell: bash
-      run: |
+    - run: |
         pip install PureCloudPlatformClientV2
-
-    - name: Download Archy binary
-      shell: bash
-      run: |
-        ARCHY_VERSION="v2.0.1"
-        echo "Downloading Archy $ARCHY_VERSION..."
-        wget https://sdk-cdn.mypurecloud.com/archy/$ARCHY_VERSION/archy-linux-x64 -O archy
-        chmod +x archy
-        mkdir -p $GITHUB_WORKSPACE/archy
-        mv archy $GITHUB_WORKSPACE/archy/
-        echo "$GITHUB_WORKSPACE/archy" >> $GITHUB_PATH
-
-
-
-    - name: Install Genesys Cloud CLI
-      run: |
-        echo "Installing Genesys CLI..."
-        curl -L https://sdk-cdn.mypurecloud.com/cli/linux/amd64/latest/genesyscloud -o genesyscloud
-        chmod +x genesyscloud
-        mv genesyscloud gc
-
-        echo "$GITHUB_WORKSPACE" >> $GITHUB_PATH
+        mkdir output
+        # mkdir archy
+        # cd archy
+        # wget -q https://sdk-cdn.mypurecloud.com/archy/latest/archy-linux.zip
+        # unzip archy-linux.zip
+        # . archy version                            
+        # export PATH=$PATH:$GITHUB_WORKSPACE/archy
+        # cd ..
+        # pwd
+        # archy version
       shell: bash
